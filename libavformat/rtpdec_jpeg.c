@@ -350,7 +350,8 @@ static int jpeg_parse_packet(AVFormatContext *ctx, PayloadContext *jpeg,
         return AVERROR_INVALIDDATA;
     }
 
-    if (off != avio_tell(jpeg->frame) - jpeg->hdr_size) {
+    int64_t sz = avio_tell(jpeg->frame) - jpeg->hdr_size;
+    if (off != sz && off != sz + 132) {
         av_log(ctx, AV_LOG_ERROR,
                "Missing packets; dropping frame.\n");
         return AVERROR(EAGAIN);
